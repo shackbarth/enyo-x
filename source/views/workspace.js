@@ -314,7 +314,20 @@ trailing:true white:true*/
      @todo Document the requery method.
      */
     requery: function () {
-      this.fetch(this.value.id);
+      var that = this,
+        options = {
+          success: function () {
+            that.fetch(that.value.id);
+          },
+          error: function () {
+            console.log("Error releasing lock.");
+            // fetch anyway. Why not!?
+            that.fetch(that.value.id);
+          }
+        };
+
+      // first we want to release the lock we have on this record
+      this.value.releaseLock(options);
     },
     /**
      @todo Document the save method.
